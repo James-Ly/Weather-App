@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from . import models, forms
 
@@ -29,7 +29,7 @@ def index(request):
             message_class = 'is-danger'
         else:
             message = 'City added successfully'
-            message_class = 'is-sucess'
+            message_class = 'is-success'
 
     print(err_msg)
     city_form = forms.CityForm()
@@ -48,3 +48,8 @@ def index(request):
         weather_data.append(city_weather)
     context = {'city_weather': weather_data, 'form': city_form, 'message': message, 'message_class': message_class}
     return render(request, 'weather/weather.html', context)
+
+
+def delete_city(request, city_name):
+    models.City.objects.filter(name=city_name).delete()
+    return redirect('theweather:index')
